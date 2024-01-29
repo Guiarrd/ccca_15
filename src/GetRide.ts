@@ -1,7 +1,9 @@
-export default class GetRide {
-    constructor() {}
+import RideDAO from "./RideDAO";
 
-    execute (rideId: string) {
-        return null;
+export default class GetRide {
+    constructor(readonly rideDao: RideDAO) {}
+
+    async execute (rideId: string) {
+        return await this.rideDao.getByRideId(rideId)
     }
 }
