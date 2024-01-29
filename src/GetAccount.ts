@@ -5,8 +5,7 @@ export default class GetAccount {
 	constructor (readonly accountDAO: AccountDAO) {}
 
 	async execute(accountId: string) {
-		const accountDAO = new AccountDAODataBase();
-		return await accountDAO.getById(accountId);
+		return await this.accountDAO.getById(accountId);
 	}
 }
 
