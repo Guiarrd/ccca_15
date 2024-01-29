@@ -6,7 +6,6 @@ import sinon from "sinon";
 import { RideDAODataBase } from '../src/RideDAO';
 
 let requestRide: RequestRide;
-let getAccount: GetAccount;
 
 const input = {
     passengerId: crypto.randomUUID(), 
@@ -28,8 +27,7 @@ const rideStub = {
 
 beforeEach(() => {
     const accountDAO = new AccountDAODataBase();
-    getAccount = new GetAccount(accountDAO);
-    requestRide = new RequestRide(getAccount);
+    requestRide = new RequestRide(accountDAO);
 })
 
 test("Não deve solicitar uma corrida se a conta for de um motorista", async () => {
@@ -41,15 +39,14 @@ test("Não deve solicitar uma corrida se a conta for de um motorista", async () 
         carPlate: "ABC1234",
         is_driver: true
     }
-
-    const getByIdStub = sinon.stub(GetAccount.prototype, "execute").resolves(driverStub)
+    const getByIdStub = sinon.stub(AccountDAODataBase.prototype, "getById").resolves(driverStub)
 
     await expect(() => requestRide.execute(input)).rejects.toThrow(new Error("Cannot request a ride for drivers."));
     getByIdStub.restore();
 })
 
 test("Não deve solicitar uma corrida se o passageiro já possuir uma corrida em andamento", async () => {
-    const getByIdStub = sinon.stub(GetAccount.prototype, "execute").resolves(passengerStub)
+    const getByIdStub = sinon.stub(AccountDAODataBase.prototype, "getById").resolves(passengerStub)
     const getByPassengerIdStub = sinon.stub(RideDAODataBase.prototype, "getByPassengerId").resolves(rideStub)
 
     await expect(() => requestRide.execute(input)).rejects.toThrow(new Error("Cannot request a ride for passengers with unfinished rides."));
@@ -62,11 +59,11 @@ test("Deve solicitar a corrida do passageiro", async () => {
         ...rideStub,
         status: "completed"
     }
-
-    const getByIdStub = sinon.stub(GetAccount.prototype, "execute").resolves(passengerStub)
+    const getByIdStub = sinon.stub(AccountDAODataBase.prototype, "getById").resolves(passengerStub)
     const getByPassengerIdStub = sinon.stub(RideDAODataBase.prototype, "getByPassengerId").resolves(completedRideStub)
 
     const outputRide = await requestRide.execute(input);
+    
     expect(outputRide.rideId).toBeDefined();
     getByIdStub.restore();
     getByPassengerIdStub.restore();

@@ -1,13 +1,14 @@
 import crypto from "crypto";
 import GetAccount from "./GetAccount";
 import { RideDAODataBase } from "./RideDAO";
+import AccountDAO from "./AccountDAO";
 
 export default class RequestRide {
-    constructor(readonly getAccount: GetAccount) {}
+    constructor(readonly accountDAO: AccountDAO) {}
 
     async execute (input: any) {
         input.rideId = crypto.randomUUID();
-        const requesterAccount = await this.getAccount.execute(input.passengerId);
+        const requesterAccount = await this.accountDAO.getById(input.passengerId);
         if (requesterAccount.is_driver) throw new Error("Cannot request a ride for drivers.")
         const rideDAO = new RideDAODataBase();
         const outputRide = await rideDAO.getByPassengerId(input.passengerId);
