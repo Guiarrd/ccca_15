@@ -1,6 +1,4 @@
 import AccountRepository from "../../infrastructure/repository/AccountRepository";
-import GetAccount from "./GetAccount";
-import GetRide from "./GetRide";
 import RideRepository from "../../infrastructure/repository/RideRepository";
 
 export default class AcceptRide {
@@ -8,9 +6,16 @@ export default class AcceptRide {
 
     async execute (input: any) {
         const account = await this.accountRepository.getById(input.driverId);
-        if (account?.isPassenger) throw new Error("Passenger cannot accept a ride.");
+        if (!account) throw new Error("Account does not exist.");
+        if (account.isPassenger) throw new Error("Passenger cannot accept a ride.");
         const ride = await this.rideRepository.get(input.rideId);
         if (!ride) throw new Error("Ride not found.");
-        if (ride.status !== "requested") throw new Error("Can only accept a ride that is requested.");
+        ride.accept(input.driverId);
+        this.rideRepository.update(ride);
     }
+}
+
+type Input = {
+    rideId: string,
+    driveId: string
 }
