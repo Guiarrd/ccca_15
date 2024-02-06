@@ -11,12 +11,13 @@ export default class GetRide {
         if (!passanger) throw new Error("Passenger not found.");
         return {
             passengerId: ride.passengerId,
+            driverId: ride.getDriverId(),
             rideId: ride.rideId,
             fromLat: ride.fromLat,
             fromLong: ride.fromLong,
             toLat: ride.toLat,
             toLong: ride.toLong,
-            status: ride.status,
+            status: ride.getStatus(),
             date: ride.date,
             passengerName: passanger.name
         };
@@ -25,6 +26,7 @@ export default class GetRide {
 
 type Output = {
     passengerId: string,
+    driverId?: string
     rideId: string,
     fromLat: number,
     fromLong: number,
