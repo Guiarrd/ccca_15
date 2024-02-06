@@ -13,13 +13,13 @@ export default class GetRide {
             passengerId: ride.passengerId,
             driverId: ride.getDriverId(),
             rideId: ride.rideId,
-            fromLat: ride.fromLat,
-            fromLong: ride.fromLong,
-            toLat: ride.toLat,
-            toLong: ride.toLong,
+            fromLat: ride.getFromLat(),
+            fromLong: ride.getFromLong(),
+            toLat: ride.getToLat(),
+            toLong: ride.getToLong(),
             status: ride.getStatus(),
             date: ride.date,
-            passengerName: passanger.name
+            passengerName: passanger.getName()
         };
     }
 }

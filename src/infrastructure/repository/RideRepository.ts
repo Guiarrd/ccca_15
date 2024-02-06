@@ -13,7 +13,7 @@ export class RideRepositoryDataBase implements RideRepository {
     constructor (readonly connection: DatabaseConnection) {}
 
     async save(ride: Ride): Promise<void> {
-        await this.connection.query("insert into cccat15.ride (ride_id, passenger_id, from_lat, from_long, to_lat, to_long, status, date) values ($1, $2, $3, $4, $5, $6, $7, $8)", [ride.rideId, ride.passengerId, ride.fromLat, ride.fromLong, ride.toLat, ride.toLong, "requested", new Date()]);	
+        await this.connection.query("insert into cccat15.ride (ride_id, passenger_id, from_lat, from_long, to_lat, to_long, status, date) values ($1, $2, $3, $4, $5, $6, $7, $8)", [ride.rideId, ride.passengerId, ride.getFromLat(), ride.getFromLong(), ride.getToLat(), ride.getToLong(), "requested", new Date()]);	
     }
     
     async get(rideId: string): Promise<any> {
@@ -26,7 +26,7 @@ export class RideRepositoryDataBase implements RideRepository {
         const activeRidesData = await this.connection.query("select * from cccat15.ride where passenger_id = $1 and status = 'requested'", [passengerId]);
         const activeRides: Ride[] = [];
         for (const activeRideData of activeRidesData) {
-            activeRides.push(Ride.restore(activeRideData.ride_id, activeRideData.passenger_id, parseFloat(activeRideData.from_lat), parseFloat(activeRideData.from_long), parseFloat(activeRideData.to_lat), parseFloat(activeRideData.to_long), activeRideData.getStatus(), activeRideData.date, activeRideData.driver_id));
+            activeRides.push(Ride.restore(activeRideData.ride_id, activeRideData.passenger_id, parseFloat(activeRideData.from_lat), parseFloat(activeRideData.from_long), parseFloat(activeRideData.to_lat), parseFloat(activeRideData.to_long), activeRideData.status, activeRideData.date, activeRideData.driver_id));
         }
         return activeRides;
     }

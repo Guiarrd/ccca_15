@@ -31,10 +31,10 @@ test("Deve criar a conta do motorista", async () => {
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
-    expect(outputGetAccount.name).toBe(input.name);
-    expect(outputGetAccount.email).toBe(input.email);
-    expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.carPlate).toBe(input.carPlate);
+    expect(outputGetAccount.getName()).toBe(input.name);
+    expect(outputGetAccount.getEmail()).toBe(input.email);
+    expect(outputGetAccount.getCpf()).toBe(input.cpf);
+    expect(outputGetAccount.getCarPlate()).toBe(input.carPlate);
     expect(outputGetAccount.isDriver).toBe(input.isDriver);
 });
 
@@ -49,9 +49,9 @@ test("Deve criar a conta do passageiro", async () => {
     const outputSignup = await signup.execute(input);
     expect(outputSignup).toBeDefined();
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
-    expect(outputGetAccount.name).toBe(input.name);
-    expect(outputGetAccount.email).toBe(input.email);
-    expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.getName()).toBe(input.name);
+    expect(outputGetAccount.getEmail()).toBe(input.email);
+    expect(outputGetAccount.getCpf()).toBe(input.cpf);
     expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 });
 

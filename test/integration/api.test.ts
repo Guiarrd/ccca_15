@@ -18,10 +18,10 @@ test("Deve criar a conta do motorista", async () => {
     expect(outputSignup.accountId).toBeDefined();
     const responseGetAccount = await axios.get(`http://localhost:3000/getAccount/${outputSignup.accountId}`)
     const outputGetAccount = responseGetAccount.data;
-    expect(outputGetAccount.name).toBe(input.name);
-    expect(outputGetAccount.email).toBe(input.email);
-    expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.carPlate).toBe(input.carPlate);
+    expect(outputGetAccount.name.value).toBe(input.name);
+    expect(outputGetAccount.email.value).toBe(input.email);
+    expect(outputGetAccount.cpf.value).toBe(input.cpf);
+    expect(outputGetAccount.carPlate.value).toBe(input.carPlate);
     expect(outputGetAccount.isDriver).toBe(input.isDriver);
 });
 
@@ -38,9 +38,9 @@ test("Deve criar a conta do passageiro", async () => {
     expect(outputSignup.accountId).toBeDefined();
     const responseGetAccount = await axios.get(`http://localhost:3000/getAccount/${outputSignup.accountId}`)
     const outputGetAccount = responseGetAccount.data;
-    expect(outputGetAccount.name).toBe(input.name);
-    expect(outputGetAccount.email).toBe(input.email);
-    expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.name.value).toBe(input.name);
+    expect(outputGetAccount.email.value).toBe(input.email);
+    expect(outputGetAccount.cpf.value).toBe(input.cpf);
     expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 
 });

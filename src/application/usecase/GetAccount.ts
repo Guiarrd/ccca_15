@@ -10,7 +10,3 @@ export default class GetAccount {
 		return account;
 	}
 }
-
-export async function getAccount(accountId: string): Promise<any> {
-	
-}

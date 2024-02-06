@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import { validateCpf } from "../../domain/validateCpf";
 import AccountRepository from "../../infrastructure/repository/AccountRepository";
 import MailerGateway from "../../infrastructure/gateway/MailerGateway";
 import Account from "../../domain/Account";
@@ -14,7 +13,7 @@ export default class Signup {
 		if (existingAccount) throw new Error("Account already exists");
 		const account = Account.create(input.name, input.email, input.cpf, input.isPassenger, input.isDriver, input.carPlate);
 		await this.accountRepository.save(account);
-		this.mailerGateway.send("Welcome", account.email, "Use this link to activate your account.")
+		this.mailerGateway.send("Welcome", account.getEmail(), "Use this link to activate your account.")
 		return {
 			accountId: account.accountId
 		};
