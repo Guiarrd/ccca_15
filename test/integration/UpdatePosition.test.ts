@@ -8,10 +8,13 @@ import RequestRide from "../../src/application/usecase/RequestRide";
 import { MailerGatewayConsole } from "../../src/infrastructure/gateway/MailerGateway";
 import StartRide from "../../src/application/usecase/StartRide";
 import UpdatePosition from "../../src/application/usecase/UpdatePosition";
+import { PositionRepositoryDataBase } from "../../src/infrastructure/repository/PositionRepository";
+import GetPositions from "../../src/application/usecase/GetPositions";
 
 let connection: DatabaseConnection;
 let signup: Signup;
 let getRide: GetRide;
+let getPositions: GetPositions;
 let requestRide: RequestRide;
 let acceptRide: AcceptRide;
 let startRide: StartRide;
@@ -21,12 +24,14 @@ beforeEach(() => {
     connection = new PgPromiseAdapter();
     const accountRepository = new AccountRepositoryDataBase(connection);
     const rideRepository = new RideRepositoryDataBase(connection);
+    const positionRepository = new PositionRepositoryDataBase(connection);
     signup = new Signup(accountRepository, new MailerGatewayConsole());
     requestRide = new RequestRide(rideRepository, accountRepository);
     acceptRide = new AcceptRide(accountRepository, rideRepository);
     startRide = new StartRide(rideRepository);
-    updatePosition = new UpdatePosition(rideRepository);
+    updatePosition = new UpdatePosition(rideRepository, positionRepository);
     getRide = new GetRide(rideRepository, accountRepository);
+    getPositions = new GetPositions(positionRepository);
 })
 
 test("Deve atualizar a posição durante a corrida", async () => {
@@ -72,6 +77,9 @@ test("Deve atualizar a posição durante a corrida", async () => {
     expect(outputGetRide.lastLat).toBe(-27.496887588317275);
     expect(outputGetRide.lastLong).toBe(-48.522234807851476);
     expect(outputGetRide.distance).toBe(10);
+    const outputGetPositions = await getPositions.execute(outputRequestRide.rideId);
+    expect(outputGetPositions[0].lat).toBe(-27.496887588317275);
+    expect(outputGetPositions[0].long).toBe(-48.522234807851476);
 });
 
 afterEach(async () =>{
